@@ -54,6 +54,46 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
+      path: '/posts/edit',
+      name: 'editPostPage',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/EditPostPage/reducer'),
+          import('containers/EditPostPage/sagas'),
+          import('containers/EditPostPage'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('editPostPage', reducer.default);
+          injectSagas(sagas.default);
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    }, {
+      path: '/posts/:id',
+      name: 'singlePostPage',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/SinglePostPage/reducer'),
+          import('containers/SinglePostPage/sagas'),
+          import('containers/SinglePostPage'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('singlePostPage', reducer.default);
+          injectSagas(sagas.default);
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    }, {
       path: '*',
       name: 'notfound',
       getComponent(nextState, cb) {

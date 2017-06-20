@@ -6,9 +6,12 @@ import { createSelector } from 'reselect';
 const selectPostsPageDomain = () => (state) => state.get('postsPage');
 
 /**
- * Other specific selectors
+ * Selecter por posts data
  */
-
+const selectPosts = () => createSelector(
+  selectPostsPageDomain(),
+  (postsPage) => postsPage.get('posts')
+);
 
 /**
  * Default selector used by PostsPage
@@ -19,7 +22,8 @@ const makeSelectPostsPage = () => createSelector(
   (substate) => substate.toJS()
 );
 
-export default makeSelectPostsPage;
 export {
   selectPostsPageDomain,
+  selectPosts,
+  makeSelectPostsPage
 };
