@@ -10,7 +10,18 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
-import makeSelectEditPostPage from './selectors';
+import {
+  selectPost,
+  selectPostTitle,
+  selectPostBody,
+  makeSelectEditPostPage
+} from './selectors';
+import {
+  savePostAction,
+  setPostTitle,
+  setPostBody,
+  iniPostData,
+} from './actions';
 import messages from './messages';
 
 import A from 'components/A';
@@ -74,7 +85,64 @@ const PostBody = styled.div`
   font-size: 16px;
 `;
 
+const Submit = styled.button`
+  display: inline-block;
+  box-sizing: border-box;
+  padding: 0.25em 2em;
+  text-decoration: none;
+  border-radius: 4px;
+  -webkit-font-smoothing: antialiased;
+  -webkit-touch-callout: none;
+  user-select: none;
+  cursor: pointer;
+  outline: 0;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  font-size: 16px;
+  border: 2px solid #41addd;
+  color: #41addd;
+
+  &:active {
+    background: #41addd;
+    color: #fff;
+  }
+`;
+
 export class EditPostPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
+  // handleSubmit() {
+  //   alert('in');
+  //   if (this.props.title && this.props.username.trim().length > 0 && this.props.body && this.props.body.trim().length > 0) {
+  //     this.props.doSave();
+  //   }
+  //   return false;
+  // }
+  constructor(props) {
+    super(props);
+    this.state = {
+      title: '',
+      body: ''
+    };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  }
+
+  handleSubmit(event) {
+    this.props.doSave();
+    event.preventDefault();
+  }
+
+
   render() {
     return (
       <ContentWrapper>
@@ -87,15 +155,19 @@ export class EditPostPage extends React.Component { // eslint-disable-line react
         <PostWrapper>
           <H3>Create New Post</H3>
           <PostBody>
-            <Input name="title" placeholder="Post Title" />
-            <TextArea name="title" placeholder="Post Content" />
-            <ToolBar>
-              <BUTTON>Save</BUTTON>
-              <BUTTON>Cancel</BUTTON>
-              <div style={{float:'left', marginTop:'10px'}}>
-                <A href="/posts">Back to Posts</A>
-              </div>
-            </ToolBar>
+            <form>
+              <Input type="hidden" id="id" value={this.props.id} name="id" />
+              <Input type="hidden" id="userId" value={this.props.userId} name="userId" />
+              <Input onChange={this.handleChange} type="text" id="title" value={this.state.title} name="title" placeholder="Post Title" />
+              <TextArea onChange={this.handleChange} id="body" value={this.state.body} name="body" placeholder="Post Content" />
+              <ToolBar>
+                <Submit>Save</Submit>
+                <BUTTON>Cancel</BUTTON>
+                <div style={{float:'left', marginTop:'10px'}}>
+                  <A href="/posts">Back to Posts</A>
+                </div>
+              </ToolBar>
+            </form>
           </PostBody>
         </PostWrapper>
       </ContentWrapper>
@@ -105,14 +177,25 @@ export class EditPostPage extends React.Component { // eslint-disable-line react
 
 EditPostPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  post: PropTypes.object,
+  //pdata: PropTypes.array,
+  //id: PropTypes.string,
+  //userId: PropTypes.string,
+  title: PropTypes.string,
+  body: PropTypes.string,
+  doSave: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
   EditPostPage: makeSelectEditPostPage(),
+  post: selectPost(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
+    doSave: () => {
+      dispatch(savePostAction());
+    },
     dispatch,
   };
 }

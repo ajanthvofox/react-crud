@@ -74,6 +74,26 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
+      path: '/posts/save',
+      name: 'SavePost',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/SavePost/reducer'),
+          import('containers/SavePost/sagas'),
+          import('containers/SavePost'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('SavePost', reducer.default);
+          injectSagas(sagas.default);
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    }, {
       path: '/posts/:id',
       name: 'singlePostPage',
       getComponent(nextState, cb) {

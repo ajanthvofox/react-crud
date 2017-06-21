@@ -1,6 +1,6 @@
 // import { take, call, put, select } from 'redux-saga/effects';
 import { take, takeLatest, call, put, select } from 'redux-saga/effects';
-
+import { LOCATION_CHANGE } from 'react-router-redux';
 import request from 'utils/request';
 
 import {
@@ -12,12 +12,17 @@ import {
 import {
   loadPostAction,
   loadPostSuccessAction,
-  loadPostErrorAction
-} from './actions'
+  loadPostErrorAction,
+  changePostId,
+} from './actions';
+
+import { selectPostId } from './selectors';
 
 // Saga to load single post data
 function* loadPost() {
-  const url = `https://jsonplaceholder.typicode.com/posts/`+window.postId;
+  const pid = yield select(selectPostId());
+  console.log(pid);
+  const url = `https://jsonplaceholder.typicode.com/posts/${pid}`;
   const params = {
     method: 'GET',
     headers: {

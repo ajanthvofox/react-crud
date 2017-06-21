@@ -8,7 +8,8 @@ import {
   DEFAULT_ACTION,
   LOAD_POST,
   LOAD_POST_SUCCESS,
-  LOAD_POST_ERROR
+  LOAD_POST_ERROR,
+  CHANGE_POST_ID,
 } from './constants';
 
 export function defaultAction() {
@@ -33,5 +34,13 @@ export function loadPostSuccessAction(data) {
 export function loadPostErrorAction() {
   return {
     type: LOAD_POST_ERROR,
+  };
+}
+
+export function changePostId(pid) {
+  console.log(pid);
+  return {
+    type: CHANGE_POST_ID,
+    pid,
   };
 }

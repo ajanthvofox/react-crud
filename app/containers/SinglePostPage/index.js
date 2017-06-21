@@ -16,7 +16,8 @@ import {
   selectPostId
 } from './selectors';
 import {
-  loadPostAction
+  loadPostAction,
+  changePostId,
 } from './actions';
 import messages from './messages';
 import A from 'components/A';
@@ -51,13 +52,22 @@ const PostBody = styled.div`
 `;
 
 export class SinglePostPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
+
+  componentWillMount() {
+    this.props.onChangePostId(this.props.params.id);
+
+  }
+
+  componentDidMount() {
+      this.props.doLoad();
+  }
   constructor (props) {
     super(props)
     // call the fetch when the component starts up
-    console.log(this.props.params.id);
-    window.postId = this.props.params.id;
+    //console.log(this.props.params.id);
+    //window.postId = this.props.params.id;
     //this.prop.postId = this.props.params.id;
-    this.props.doLoad()
+
   }
 
   render() {
@@ -96,7 +106,7 @@ export class SinglePostPage extends React.Component { // eslint-disable-line rea
 SinglePostPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   post: PropTypes.object,
-  postId: PropTypes.string,
+  pid: PropTypes.string,
   doLoad: PropTypes.func,
 };
 
@@ -107,7 +117,8 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
-    doLoad: (id) => {
+    onChangePostId: (pid) => dispatch(changePostId(pid)),
+    doLoad: () => {
       dispatch(loadPostAction());
     },
     dispatch,

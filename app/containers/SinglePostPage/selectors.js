@@ -18,7 +18,7 @@ const selectPost = () => createSelector(
  */
 const selectPostId = () => createSelector(
   selectSinglePostPageDomain(),
-  (postPage) => postPage.get('postId')
+  (postPage) => postPage.get('pid')
 );
 
 /**

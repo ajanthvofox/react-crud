@@ -6,9 +6,28 @@ import { createSelector } from 'reselect';
 const selectEditPostPageDomain = () => (state) => state.get('editPostPage');
 
 /**
- * Other specific selectors
+ * Selecter to save post data
  */
+const selectPost = () => createSelector(
+  selectEditPostPageDomain(),
+  (editPostPage) => editPostPage.get('post')
+);
 
+/**
+ * Selecter to get post title
+ */
+const selectPostTitle = () => createSelector(
+  selectEditPostPageDomain(),
+  (editPostPage) => editPostPage.get('ptitle')
+);
+
+/**
+ * Selecter to get post body
+ */
+const selectPostBody = () => createSelector(
+  selectEditPostPageDomain(),
+  (editPostPage) => editPostPage.get('pbody')
+);
 
 /**
  * Default selector used by EditPostPage
@@ -19,7 +38,12 @@ const makeSelectEditPostPage = () => createSelector(
   (substate) => substate.toJS()
 );
 
-export default makeSelectEditPostPage;
+//export default makeSelectEditPostPage;
+
 export {
   selectEditPostPageDomain,
+  selectPost,
+  selectPostTitle,
+  selectPostBody,
+  makeSelectEditPostPage,
 };
