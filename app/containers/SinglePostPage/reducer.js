@@ -23,7 +23,7 @@ function singlePostPageReducer(state = initialState, action) {
     case DEFAULT_ACTION:
       return state;
     case LOAD_POST:
-      return state;
+      return state.set('post', {loading:"Loading"});
     case LOAD_POST_SUCCESS:
       return state.set('post', action.data);
     case LOAD_POST_ERROR:

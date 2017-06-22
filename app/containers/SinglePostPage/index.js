@@ -11,6 +11,7 @@ import { Link } from 'react-router';
 import styled from 'styled-components';
 import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
+import Loader from 'react-loader';
 import ReactConfirmAlert, { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'
 import Notifications, {notify} from 'react-notify-toast';
@@ -116,7 +117,7 @@ export class SinglePostPage extends React.Component { // eslint-disable-line rea
       message: 'Are you sure you want to delete this post?',               // Message dialog
       confirmLabel: 'Confirm',                           // Text button confirm
       cancelLabel: 'Cancel',                             // Text button cancel
-      onConfirm: () => this.props.doDelete(),    // Action after Confirm 
+      onConfirm: () => this.props.doDelete(),    // Action after Confirm
       //onCancel: () => alert('Action after Cancel'),      // Action after Cancel
     })
   };
@@ -127,29 +128,35 @@ export class SinglePostPage extends React.Component { // eslint-disable-line rea
       postData = this.props.post
     }
     return (
-      <ContentWrapper>
-        <Helmet
-          title="View Post"
-          meta={[
-            { name: 'description', content: 'View post' },
-          ]}
-        />
-        <div>
-           <PostWrapper>
-             <H3>{postData.id}. {postData.title}</H3>
-             <PostBody>
-               {postData.body}
-               <ToolBar>
-                 <EditLink to={"/posts/edit/"+postData.id}>Edit</EditLink>
-                 <BUTTON onClick={this.submit}>Delete</BUTTON>
-                 <div style={{float:'left', marginTop:'10px'}}>
-                   <Link style={{color:'#41addd', fontWeight:'bold'}} href="/posts">Back to Posts</Link>
-                 </div>
-               </ToolBar>
-             </PostBody>
-           </PostWrapper>
-        </div>
-      </ContentWrapper>
+      <Loader loaded={this.props.post && this.props.post.loading!="Loading"} lines={13} length={20} width={10} radius={30}
+      corners={1} rotate={0} direction={1} color="#000" speed={1}
+      trail={60} shadow={false} hwaccel={false} className="spinner"
+      zIndex={2e9} top="50%" left="50%" scale={1.00}
+      loadedClassName="loadedContent">
+        <ContentWrapper>
+          <Helmet
+            title="View Post"
+            meta={[
+              { name: 'description', content: 'View post' },
+            ]}
+          />
+          <div>
+             <PostWrapper>
+               <H3>{postData.id}. {postData.title}</H3>
+               <PostBody>
+                 {postData.body}
+                 <ToolBar>
+                   <EditLink to={"/posts/edit/"+postData.id}>Edit</EditLink>
+                   <BUTTON onClick={this.submit}>Delete</BUTTON>
+                   <div style={{float:'left', marginTop:'10px'}}>
+                     <Link style={{color:'#41addd', fontWeight:'bold'}} href="/posts">Back to Posts</Link>
+                   </div>
+                 </ToolBar>
+               </PostBody>
+             </PostWrapper>
+          </div>
+        </ContentWrapper>
+      </Loader>
     );
   }
 }

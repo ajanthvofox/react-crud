@@ -11,6 +11,7 @@ import { Link } from 'react-router';
 import styled from 'styled-components';
 import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
+import Loader from 'react-loader';
 import {
   makeSelectPostsPage,
   selectPosts
@@ -78,34 +79,40 @@ export class PostsPage extends React.Component { // eslint-disable-line react/pr
 
   render() {
     let postData = [];
-    if (this.props.posts) {
+    if (this.props.posts && !this.props.posts.loading) {
       postData = this.props.posts
     }
     //console.log(postData);
     return (
-      <ContentWrapper>
-        <Helmet
-          title="View All Posts"
-          meta={[
-            { name: 'description', content: 'List all posts' },
-          ]}
-        />
-        <H2>All Posts <div style={{float:'right'}}><AddLink to="posts/edit">Add New</AddLink></div></H2>
-        <div>
-          {
-            postData.map((row, index) => {
-               return (
-                 <PostWrapper key={index}>
-                   <H3>{row.id}. {row.title}</H3>
-                   <PostBody>
-                     {row.body.substr(0,70)}...<Link style={{color:'#41addd', fontWeight:'bold'}} to={"/posts/"+row.id}>Read More</Link>
-                   </PostBody>
-                 </PostWrapper>
-               );
-            })
-          }
-        </div>
-      </ContentWrapper>
+      <Loader loaded={this.props.posts} lines={13} length={20} width={10} radius={30}
+      corners={1} rotate={0} direction={1} color="#000" speed={1}
+      trail={60} shadow={false} hwaccel={false} className="spinner"
+      zIndex={2e9} top="50%" left="50%" scale={1.00}
+      loadedClassName="loadedContent">
+        <ContentWrapper>
+          <Helmet
+            title="View All Posts"
+            meta={[
+              { name: 'description', content: 'List all posts' },
+            ]}
+          />
+          <H2>All Posts <div style={{float:'right'}}><AddLink to="posts/edit">Add New</AddLink></div></H2>
+          <div>
+            {
+              postData.map((row, index) => {
+                 return (
+                   <PostWrapper key={index}>
+                     <H3>{row.id}. {row.title}</H3>
+                     <PostBody>
+                       {row.body.substr(0,70)}...<Link style={{color:'#41addd', fontWeight:'bold'}} to={"/posts/"+row.id}>Read More</Link>
+                     </PostBody>
+                   </PostWrapper>
+                 );
+              })
+            }
+          </div>
+        </ContentWrapper>
+      </Loader>
     );
   }
 }
