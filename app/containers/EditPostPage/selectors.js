@@ -10,7 +10,15 @@ const selectEditPostPageDomain = () => (state) => state.get('editPostPage');
  */
 const selectPost = () => createSelector(
   selectEditPostPageDomain(),
-  (editPostPage) => editPostPage.get('post')
+  (editPage) => editPage.get('post')
+);
+
+/**
+ * Selecter for post Id
+ */
+const selectPostId = () => createSelector(
+  selectEditPostPageDomain(),
+  (editPage) => editPage.get('pid')
 );
 
 /**
@@ -18,7 +26,7 @@ const selectPost = () => createSelector(
  */
 const selectPostTitle = () => createSelector(
   selectEditPostPageDomain(),
-  (editPostPage) => editPostPage.get('ptitle')
+  (editPage) => editPage.get('ptitle')
 );
 
 /**
@@ -26,7 +34,7 @@ const selectPostTitle = () => createSelector(
  */
 const selectPostBody = () => createSelector(
   selectEditPostPageDomain(),
-  (editPostPage) => editPostPage.get('pbody')
+  (editPage) => editPage.get('pbody')
 );
 
 /**
@@ -43,6 +51,7 @@ const makeSelectEditPostPage = () => createSelector(
 export {
   selectEditPostPageDomain,
   selectPost,
+  selectPostId,
   selectPostTitle,
   selectPostBody,
   makeSelectEditPostPage,

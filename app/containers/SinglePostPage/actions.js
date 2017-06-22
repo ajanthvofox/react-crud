@@ -6,6 +6,9 @@
 
 import {
   DEFAULT_ACTION,
+  DELETE_POST,
+  DELETE_POST_SUCCESS,
+  DELETE_POST_ERROR,
   LOAD_POST,
   LOAD_POST_SUCCESS,
   LOAD_POST_ERROR,
@@ -15,6 +18,25 @@ import {
 export function defaultAction() {
   return {
     type: DEFAULT_ACTION,
+  };
+}
+
+export function deletePostAction() {
+  return {
+    type: DELETE_POST,
+  };
+}
+
+export function deletePostSuccessAction(data) {
+  return {
+    type: DELETE_POST_SUCCESS,
+    data,
+  };
+}
+
+export function deletePostErrorAction() {
+  return {
+    type: DELETE_POST_ERROR,
   };
 }
 
@@ -38,7 +60,7 @@ export function loadPostErrorAction() {
 }
 
 export function changePostId(pid) {
-  console.log(pid);
+  //console.log(pid);
   return {
     type: CHANGE_POST_ID,
     pid,

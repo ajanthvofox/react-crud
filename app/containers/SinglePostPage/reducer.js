@@ -7,6 +7,9 @@
 import { fromJS } from 'immutable';
 import {
   DEFAULT_ACTION,
+  DELETE_POST,
+  DELETE_POST_SUCCESS,
+  DELETE_POST_ERROR,
   LOAD_POST,
   LOAD_POST_SUCCESS,
   LOAD_POST_ERROR,
@@ -25,8 +28,14 @@ function singlePostPageReducer(state = initialState, action) {
       return state.set('post', action.data);
     case LOAD_POST_ERROR:
       return state;
+    case DELETE_POST:
+      return state;
+    case DELETE_POST_SUCCESS:
+      return state.set('post', {success:'Success'});
+    case LOAD_POST_ERROR:
+      return state.set('post', {error:'Error'});
     case CHANGE_POST_ID:
-      console.log(action.pid);
+      //console.log(action.pid);
       return state.set('pid', action.pid);
     default:
       return state;

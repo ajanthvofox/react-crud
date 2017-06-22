@@ -6,21 +6,27 @@
 
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
+import Notifications, {notify} from 'react-notify-toast';
 import {
+  makeSelectEditPostPage,
+  selectPostId,
   selectPost,
   selectPostTitle,
   selectPostBody,
-  makeSelectEditPostPage
 } from './selectors';
 import {
+  resetPostAction,
   savePostAction,
   setPostTitle,
   setPostBody,
   iniPostData,
+  loadPostAction,
+  changePostId,
 } from './actions';
 import messages from './messages';
 
@@ -85,9 +91,40 @@ const PostBody = styled.div`
   font-size: 16px;
 `;
 
-const Submit = styled.button`
+const Button =  styled.button`
   display: inline-block;
   box-sizing: border-box;
+  line-height: 1.5;
+  margin-left:10px;
+  padding: 0.25em 2em;
+  text-decoration: none;
+  border-radius: 4px;
+  -webkit-font-smoothing: antialiased;
+  -webkit-touch-callout: none;
+  user-select: none;
+  cursor: pointer;
+  outline: 0;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  font-size: 16px;
+  border: 2px solid #41addd;
+  color: #41addd;
+
+  &:active {
+    background: #41addd;
+    color: #fff;
+  }
+  &:disabled {
+    color: #81d8dd;
+    border: 2px solid #81d8dd;
+    cursor: not-allowed;
+  }
+`;
+
+const BackLink =  styled(Link)`
+  display: inline-block;
+  box-sizing: border-box;
+  margin-left:10px;
   padding: 0.25em 2em;
   text-decoration: none;
   border-radius: 4px;
@@ -109,41 +146,58 @@ const Submit = styled.button`
 `;
 
 export class EditPostPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
-  // handleSubmit() {
-  //   alert('in');
-  //   if (this.props.title && this.props.username.trim().length > 0 && this.props.body && this.props.body.trim().length > 0) {
-  //     this.props.doSave();
-  //   }
-  //   return false;
-  // }
-  constructor(props) {
-    super(props);
-    this.state = {
-      title: '',
-      body: ''
-    };
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+  constructor() {
+        super();
+        this.state = {
+        }
+    }
+  componentWillMount() {
+      this.props.doReset();
+      if(this.props.params.id) {
+        this.props.onChangePostId(this.props.params.id);
+      }
   }
+  componentDidMount() {
+    if(this.props.params.id) {
+      this.props.doLoad();
+    }
 
-  handleChange(event) {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
-
-    this.setState({
-      [name]: value
-    });
+    this.setState({[title]: this.props.ptitle});
   }
-
-  handleSubmit(event) {
-    this.props.doSave();
-    event.preventDefault();
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.post.success == "Success") {
+      notify.show('Post Saved Successfully','success');
+      this.props.router.push('/posts');
+    }
+    if (nextProps.post.error == 'Error') {
+      notify.show('Failed Saving the Post','error');
+    }
+    // if(nextProps.post.title == nextProps.ptitle && nextProps.post.body == nextProps.pbody) {
+    //  console.log(nextProps.post.title+"--"+nextProps.ptitle+"--"+nextProps.pbody);
+    //   this.setState({[title]: nextProps.ptitle});
+    //  console.log(this.state.title);
+    // }
   }
-
-
+  onChangeTitle(e) {
+    //this.setState({[title]: e.target.value});
+    this.props.onChangePostTitle(e.target.value);
+  }
+  onChangeBody(e) {
+    //this.setState({[body]: e.target.value});
+    this.props.onChangePostBody(e.target.value);
+  }
   render() {
+    let backBtn = null;
+    let head = null;
+    if(this.props.params.id) {
+      backBtn = <Link style={{color:'#41addd', fontWeight:'bold'}} to={"/posts/"+this.props.pid}>Back to Post</Link>;
+      head = <H3>Edit Post</H3>;
+    }
+    else {
+      backBtn = <Link style={{color:'#41addd', fontWeight:'bold'}} to="/posts">Back to Posts</Link>;
+      head = <H3>Create New Post</H3>;
+    }
     return (
       <ContentWrapper>
         <Helmet
@@ -153,21 +207,17 @@ export class EditPostPage extends React.Component { // eslint-disable-line react
           ]}
         />
         <PostWrapper>
-          <H3>Create New Post</H3>
+          {head}
           <PostBody>
-            <form>
-              <Input type="hidden" id="id" value={this.props.id} name="id" />
-              <Input type="hidden" id="userId" value={this.props.userId} name="userId" />
-              <Input onChange={this.handleChange} type="text" id="title" value={this.state.title} name="title" placeholder="Post Title" />
-              <TextArea onChange={this.handleChange} id="body" value={this.state.body} name="body" placeholder="Post Content" />
+              <Input value={this.props.ptitle} onChange={(value) => this.onChangeTitle(value)} ref="titleInput" type="text" id="title" name="title" placeholder="Post Title" />
+              <TextArea value={this.props.pbody} onChange={(value) => this.onChangeBody(value)} ref="bodyInput" id="body" name="body" placeholder="Post Content" />
               <ToolBar>
-                <Submit>Save</Submit>
-                <BUTTON>Cancel</BUTTON>
+                <Button disabled={!this.props.ptitle || !this.props.pbody} onClick={this.props.doSave}>Save</Button>
+                <BackLink to="/posts">Cancel</BackLink>
                 <div style={{float:'left', marginTop:'10px'}}>
-                  <A href="/posts">Back to Posts</A>
+                  {backBtn}
                 </div>
               </ToolBar>
-            </form>
           </PostBody>
         </PostWrapper>
       </ContentWrapper>
@@ -181,20 +231,45 @@ EditPostPage.propTypes = {
   //pdata: PropTypes.array,
   //id: PropTypes.string,
   //userId: PropTypes.string,
-  title: PropTypes.string,
-  body: PropTypes.string,
+  pid: PropTypes.string,
+  ptitle: PropTypes.string,
+  pbody: PropTypes.string,
   doSave: PropTypes.func,
+  doLoad: PropTypes.func,
+  doReset: PropTypes.func,
+  titleChangeHandler: PropTypes.func,
+  bodyChangeHandler: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
   EditPostPage: makeSelectEditPostPage(),
   post: selectPost(),
+  pid: selectPostId(),
+  ptitle: selectPostTitle(),
+  pbody: selectPostBody(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
-    doSave: () => {
+    titleChangeHandler: (evt) => {
+      //console.log(evt.target.value);
+      dispatch(setPostTitle(evt.target.value));
+    },
+    bodyChangeHandler: (evt) => {
+      dispatch(setPostBody(evt.target.value));
+    },
+    doSave: (e) => {
+      e.preventDefault();
       dispatch(savePostAction());
+    },
+    onChangePostId: (pid) => dispatch(changePostId(pid)),
+    onChangePostTitle: (ptitle) => dispatch(setPostTitle(ptitle)),
+    onChangePostBody: (pbody) => dispatch(setPostBody(pbody)),
+    doLoad: () => {
+      dispatch(loadPostAction());
+    },
+    doReset: () => {
+      dispatch(resetPostAction());
     },
     dispatch,
   };

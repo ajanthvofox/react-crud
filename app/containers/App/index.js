@@ -14,6 +14,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Header from 'components/Header';
+import Notifications, {notify} from 'react-notify-toast';
 
 const HeaderContainer = styled.div`
   width: 100%;
@@ -41,6 +42,7 @@ export default class App extends React.PureComponent { // eslint-disable-line re
         <div>
           {React.Children.toArray(this.props.children)}
         </div>
+        <Notifications />
       </div>
     );
   }

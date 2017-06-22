@@ -7,6 +7,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
+import { Link } from 'react-router';
 import styled from 'styled-components';
 import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
@@ -43,6 +44,30 @@ const PostBody = styled.div`
   font-size: 16px;
 `;
 
+const AddLink =  styled(Link)`
+display: inline-block;
+box-sizing: border-box;
+margin-left:10px;
+padding: 0.25em 2em;
+text-decoration: none;
+border-radius: 4px;
+-webkit-font-smoothing: antialiased;
+-webkit-touch-callout: none;
+user-select: none;
+cursor: pointer;
+outline: 0;
+font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+font-weight: bold;
+font-size: 16px;
+border: 2px solid #41addd;
+color: #41addd;
+
+&:active {
+  background: #41addd;
+  color: #fff;
+}
+`;
+
 export class PostsPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
   constructor (props) {
@@ -65,7 +90,7 @@ export class PostsPage extends React.Component { // eslint-disable-line react/pr
             { name: 'description', content: 'List all posts' },
           ]}
         />
-        <H2>All Posts <div style={{float:'right'}}><BUTTON>Add New</BUTTON></div></H2>
+        <H2>All Posts <div style={{float:'right'}}><AddLink to="posts/edit">Add New</AddLink></div></H2>
         <div>
           {
             postData.map((row, index) => {
@@ -73,7 +98,7 @@ export class PostsPage extends React.Component { // eslint-disable-line react/pr
                  <PostWrapper key={index}>
                    <H3>{row.id}. {row.title}</H3>
                    <PostBody>
-                     {row.body.substr(0,70)}...<A href={"/posts/"+row.id}>Read More</A>
+                     {row.body.substr(0,70)}...<Link style={{color:'#41addd', fontWeight:'bold'}} to={"/posts/"+row.id}>Read More</Link>
                    </PostBody>
                  </PostWrapper>
                );

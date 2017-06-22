@@ -55,7 +55,7 @@ export default function createRoutes(store) {
       },
     }, {
       path: '/posts/edit',
-      name: 'editPostPage',
+      name: 'createPostPage',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
           import('containers/EditPostPage/reducer'),
@@ -74,19 +74,19 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
-      path: '/posts/save',
-      name: 'SavePost',
+      path: '/posts/edit/:id',
+      name: 'editPostPage',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          import('containers/SavePost/reducer'),
-          import('containers/SavePost/sagas'),
-          import('containers/SavePost'),
+          import('containers/EditPostPage/reducer'),
+          import('containers/EditPostPage/sagas'),
+          import('containers/EditPostPage'),
         ]);
 
         const renderRoute = loadModule(cb);
 
         importModules.then(([reducer, sagas, component]) => {
-          injectReducer('SavePost', reducer.default);
+          injectReducer('editPostPage', reducer.default);
           injectSagas(sagas.default);
           renderRoute(component);
         });

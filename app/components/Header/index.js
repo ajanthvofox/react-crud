@@ -25,9 +25,9 @@ class Header extends React.Component { // eslint-disable-line react/prefer-state
             <HeaderLink activeStyle={{ 'boxShadow': 'inset 0 -3px 0 #41addd', 'color':'#666' }} to="/posts">
               Posts Page
             </HeaderLink>
-            <HeaderLink activeStyle={{ 'boxShadow': 'inset 0 -3px 0 #41addd', 'color':'#666' }} to="/posts/edit">
+            {/* <HeaderLink activeStyle={{ 'boxShadow': 'inset 0 -3px 0 #41addd', 'color':'#666' }} to="/posts/edit">
               Create Post
-            </HeaderLink>
+            </HeaderLink> */}
           </NavBar>
         </HeaderInner>
       </div>

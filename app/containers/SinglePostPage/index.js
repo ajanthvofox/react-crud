@@ -7,9 +7,13 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
+import { Link } from 'react-router';
 import styled from 'styled-components';
 import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
+import ReactConfirmAlert, { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css'
+import Notifications, {notify} from 'react-notify-toast';
 import {
   makeSelectSinglePostPage,
   selectPost,
@@ -18,6 +22,7 @@ import {
 import {
   loadPostAction,
   changePostId,
+  deletePostAction,
 } from './actions';
 import messages from './messages';
 import A from 'components/A';
@@ -51,6 +56,31 @@ const PostBody = styled.div`
   font-size: 16px;
 `;
 
+const EditLink =  styled(Link)`
+display: inline-block;
+box-sizing: border-box;
+margin-left:10px;
+padding: 0.25em 2em;
+text-decoration: none;
+border-radius: 4px;
+-webkit-font-smoothing: antialiased;
+-webkit-touch-callout: none;
+user-select: none;
+cursor: pointer;
+outline: 0;
+font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+font-weight: bold;
+font-size: 16px;
+border: 2px solid #41addd;
+color: #41addd;
+
+&:active {
+  background: #41addd;
+  color: #fff;
+}
+`;
+
+
 export class SinglePostPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
   componentWillMount() {
@@ -69,6 +99,27 @@ export class SinglePostPage extends React.Component { // eslint-disable-line rea
     //this.prop.postId = this.props.params.id;
 
   }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.post && nextProps.post.success == "Success") {
+      notify.show('Post Deleted Successfully','success');
+      this.props.router.push('/posts');
+    }
+    if (nextProps.post && nextProps.post.error == 'Error') {
+      notify.show('Failed Deleting the Post','error');
+    }
+  }
+
+  submit = () => {
+    confirmAlert({
+      title: 'Delete Post',                        // Title dialog
+      message: 'Are you sure you want to delete this post?',               // Message dialog
+      confirmLabel: 'Confirm',                           // Text button confirm
+      cancelLabel: 'Cancel',                             // Text button cancel
+      onConfirm: () => this.props.doDelete(),    // Action after Confirm 
+      //onCancel: () => alert('Action after Cancel'),      // Action after Cancel
+    })
+  };
 
   render() {
     let postData = [];
@@ -89,10 +140,10 @@ export class SinglePostPage extends React.Component { // eslint-disable-line rea
              <PostBody>
                {postData.body}
                <ToolBar>
-                 <BUTTON>Edit</BUTTON>
-                 <BUTTON>Delete</BUTTON>
+                 <EditLink to={"/posts/edit/"+postData.id}>Edit</EditLink>
+                 <BUTTON onClick={this.submit}>Delete</BUTTON>
                  <div style={{float:'left', marginTop:'10px'}}>
-                   <A href="/posts">Back to Posts</A>
+                   <Link style={{color:'#41addd', fontWeight:'bold'}} href="/posts">Back to Posts</Link>
                  </div>
                </ToolBar>
              </PostBody>
@@ -108,6 +159,7 @@ SinglePostPage.propTypes = {
   post: PropTypes.object,
   pid: PropTypes.string,
   doLoad: PropTypes.func,
+  doDelete: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -120,6 +172,9 @@ function mapDispatchToProps(dispatch) {
     onChangePostId: (pid) => dispatch(changePostId(pid)),
     doLoad: () => {
       dispatch(loadPostAction());
+    },
+    doDelete: () => {
+      dispatch(deletePostAction());
     },
     dispatch,
   };
