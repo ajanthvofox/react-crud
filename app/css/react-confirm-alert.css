@@ -1,0 +1,109 @@
+.react-confirm-alert-blur {
+  filter: url(#gaussian-blur);
+  filter: blur(2px);
+  -webkit-filter: blur(2px);
+}
+
+.react-confirm-alert-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99;
+  background: rgba(55, 180, 220, 0.5);
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flex;
+  display: -o-flex;
+  display: flex;
+  justify-content: center;
+  -ms-align-items: center;
+  align-items: center;
+  opacity: 0;
+  -webkit-animation: react-confirm-alert-fadeIn 0.5s 0.2s forwards;
+  -moz-animation: react-confirm-alert-fadeIn 0.5s 0.2s forwards;
+  -o-animation: react-confirm-alert-fadeIn 0.5s 0.2s forwards;
+  animation: react-confirm-alert-fadeIn 0.5s 0.2s forwards;
+}
+
+.react-confirm-alert {
+  font-family: Arial, Helvetica, sans-serif;
+  width: 400px;
+  padding: 30px;
+  text-align: left;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 20px 75px rgba(0, 0, 0, 0.33);
+  color: #666;
+}
+
+.react-confirm-alert > h1 {
+  margin-top: 0;
+}
+
+.react-confirm-alert > h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.react-confirm-alert-button-group {
+  display: block;
+  margin-top: 20px;
+}
+
+.react-confirm-alert-button-group > button {
+  display: inline-block;
+  box-sizing: border-box;
+  margin-left:10px;
+  padding: 0.25em 1em;
+  text-decoration: none;
+  border-radius: 4px;
+  -webkit-font-smoothing: antialiased;
+  -webkit-touch-callout: none;
+  user-select: none;
+  cursor: pointer;
+  outline: 0;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  font-size: 15px;
+  border: 2px solid #41addd;
+  color: #41addd;
+  float:right;
+}
+
+@-webkit-keyframes react-confirm-alert-fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes react-confirm-alert-fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@-o-keyframes react-confirm-alert-fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes react-confirm-alert-fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
