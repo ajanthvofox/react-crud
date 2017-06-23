@@ -24,17 +24,13 @@ import {
 
 import {
   selectPostId,
-  selectPostTitle,
-  selectPostBody,
+  selectPost,
 } from './selectors';
 
 // Saga to load single post data
 function* savePost() {
   const pid = yield select(selectPostId());
-  const ptitle = yield select(selectPostTitle());
-  const pbody = yield select(selectPostBody());
-
-  //console.log(pdata);
+  const pdata = yield select(selectPost());
   if(pid) {
     const url = `https://jsonplaceholder.typicode.com/posts/${pid}`;
     const params = {
@@ -42,17 +38,10 @@ function* savePost() {
       headers: {
         'Content-Type': 'application/json',
       },
-      data: {
-        'id': pid,
-        'title': ptitle,
-        'body': pbody,
-        'userId': 1
-      }
+      data: pdata
     };
-    //console.log(params);
     try{
       const data = yield call(request, url, params);
-      //console.log(data);
       yield put(savePostSuccessAction(data));
     } catch(err) {
       yield put(savePostErrorAction(err));
@@ -65,23 +54,15 @@ function* savePost() {
       headers: {
         'Content-Type': 'application/json',
       },
-      data: {
-        'title': ptitle,
-        'body': pbody,
-        'userId': 1
-      }
+      data: pdata
     };
-    //console.log(params);
     try{
       const data = yield call(request, url, params);
-      //console.log(data);
       yield put(savePostSuccessAction(data));
     } catch(err) {
       yield put(savePostErrorAction(err));
     }
   }
-
-
 }
 
 export function* postsaveSaga() {
@@ -96,7 +77,6 @@ export function* defaultSaga() {
 // Saga to load single post data
 function* loadPost() {
   const pid = yield select(selectPostId());
-  console.log(pid);
   const url = `https://jsonplaceholder.typicode.com/posts/${pid}`;
   const params = {
     method: 'GET',
@@ -106,7 +86,6 @@ function* loadPost() {
   };
   try{
     const data = yield call(request, url, params);
-    //console.log(data);
     yield put(loadPostSuccessAction(data));
   } catch(err) {
     yield put(loadPostErrorAction(err));

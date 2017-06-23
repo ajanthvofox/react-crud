@@ -16,14 +16,10 @@ import {
   makeSelectEditPostPage,
   selectPostId,
   selectPost,
-  selectPostTitle,
-  selectPostBody,
 } from './selectors';
 import {
   resetPostAction,
   savePostAction,
-  setPostTitle,
-  setPostBody,
   iniPostData,
   loadPostAction,
   changePostId,
@@ -147,10 +143,23 @@ const BackLink =  styled(Link)`
 
 export class EditPostPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
-  constructor() {
-        super();
+  constructor(props) {
+      super(props);
+      if(this.props.params.id) {
         this.state = {
+          id: '',
+          title: '',
+          body: '',
+          userId: '1'
         }
+      }
+      else {
+        this.state = {
+          title: '',
+          body: '',
+          userId: '1'
+        }
+      }
     }
   componentWillMount() {
       this.props.doReset();
@@ -162,8 +171,6 @@ export class EditPostPage extends React.Component { // eslint-disable-line react
     if(this.props.params.id) {
       this.props.doLoad();
     }
-
-    this.setState({[title]: this.props.ptitle});
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.post.success == "Success") {
@@ -173,29 +180,29 @@ export class EditPostPage extends React.Component { // eslint-disable-line react
     if (nextProps.post.error == 'Error') {
       notify.show('Failed Saving the Post','error');
     }
-    // if(nextProps.post.title == nextProps.ptitle && nextProps.post.body == nextProps.pbody) {
-    //  console.log(nextProps.post.title+"--"+nextProps.ptitle+"--"+nextProps.pbody);
-    //   this.setState({[title]: nextProps.ptitle});
-    //  console.log(this.state.title);
-    // }
+    if(nextProps.post)
+    {
+      this.setState(nextProps.post);
+    }
   }
   onChangeTitle(e) {
-    //this.setState({[title]: e.target.value});
-    this.props.onChangePostTitle(e.target.value);
+    this.setState({['title']: e.target.value});
   }
   onChangeBody(e) {
-    //this.setState({[body]: e.target.value});
-    this.props.onChangePostBody(e.target.value);
+    this.setState({['body']: e.target.value});
+  }
+  submitPost(e) {
+    this.props.doSave (this.state);
   }
   render() {
     let backBtn = null;
     let head = null;
     if(this.props.params.id) {
-      backBtn = <Link style={{color:'#41addd', fontWeight:'bold'}} to={"/posts/"+this.props.pid}>Back to Post</Link>;
-      head = <H3>Edit Post</H3>;
+      backBtn = <Link style={{color:'#41addd', fontWeight:'bold', textDecoration:'none'}} to={"/posts/"+this.props.pid}>{"<< Back to Post"}</Link>;
+      head = <H3>Edit Post - {this.props.pid}</H3>;
     }
     else {
-      backBtn = <Link style={{color:'#41addd', fontWeight:'bold'}} to="/posts">Back to Posts</Link>;
+      backBtn = <Link style={{color:'#41addd', fontWeight:'bold', textDecoration:'none'}} to="/posts">{"<< Back to Posts"}</Link>;
       head = <H3>Create New Post</H3>;
     }
     return (
@@ -209,10 +216,10 @@ export class EditPostPage extends React.Component { // eslint-disable-line react
         <PostWrapper>
           {head}
           <PostBody>
-              <Input value={this.props.ptitle} onChange={(value) => this.onChangeTitle(value)} ref="titleInput" type="text" id="title" name="title" placeholder="Post Title" />
-              <TextArea value={this.props.pbody} onChange={(value) => this.onChangeBody(value)} ref="bodyInput" id="body" name="body" placeholder="Post Content" />
+              <Input value={this.state.title} onChange={(value) => this.onChangeTitle(value)} ref="titleInput" type="text" id="title" name="title" placeholder="Post Title" />
+              <TextArea value={this.state.body} onChange={(value) => this.onChangeBody(value)} ref="bodyInput" id="body" name="body" placeholder="Post Content" />
               <ToolBar>
-                <Button disabled={!this.props.ptitle || !this.props.pbody} onClick={this.props.doSave}>Save</Button>
+                <Button disabled={!this.state.title || !this.state.body} onClick={() => this.submitPost()}>Save</Button>
                 <BackLink to="/posts">Cancel</BackLink>
                 <div style={{float:'left', marginTop:'10px'}}>
                   {backBtn}
@@ -228,43 +235,24 @@ export class EditPostPage extends React.Component { // eslint-disable-line react
 EditPostPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   post: PropTypes.object,
-  //pdata: PropTypes.array,
-  //id: PropTypes.string,
-  //userId: PropTypes.string,
   pid: PropTypes.string,
-  ptitle: PropTypes.string,
-  pbody: PropTypes.string,
   doSave: PropTypes.func,
   doLoad: PropTypes.func,
   doReset: PropTypes.func,
-  titleChangeHandler: PropTypes.func,
-  bodyChangeHandler: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
   EditPostPage: makeSelectEditPostPage(),
   post: selectPost(),
   pid: selectPostId(),
-  ptitle: selectPostTitle(),
-  pbody: selectPostBody(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
-    titleChangeHandler: (evt) => {
-      //console.log(evt.target.value);
-      dispatch(setPostTitle(evt.target.value));
-    },
-    bodyChangeHandler: (evt) => {
-      dispatch(setPostBody(evt.target.value));
-    },
-    doSave: (e) => {
-      e.preventDefault();
-      dispatch(savePostAction());
+    doSave: (state) => {
+      dispatch(savePostAction(state));
     },
     onChangePostId: (pid) => dispatch(changePostId(pid)),
-    onChangePostTitle: (ptitle) => dispatch(setPostTitle(ptitle)),
-    onChangePostBody: (pbody) => dispatch(setPostBody(pbody)),
     doLoad: () => {
       dispatch(loadPostAction());
     },

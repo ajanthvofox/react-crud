@@ -48,8 +48,9 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
           ]}
         />
         <PostWrapper>
-          <H1>Welcome to Sample CRUD App</H1>
+          <H1>Welcome to React CRUD APP</H1>
         </PostWrapper>
+        <img src={require('images/banners.png')} style={{width:'100%'}} />
       </ContentWrapper>
     );
   }

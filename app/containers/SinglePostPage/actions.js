@@ -60,7 +60,6 @@ export function loadPostErrorAction() {
 }
 
 export function changePostId(pid) {
-  //console.log(pid);
   return {
     type: CHANGE_POST_ID,
     pid,

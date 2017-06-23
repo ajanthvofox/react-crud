@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import styled from 'styled-components';
+import { Link } from 'react-router';
 
 import A from './A';
 import NavBar from './NavBar';
@@ -12,12 +13,19 @@ const HeaderInner = styled.div`
   text-align: Left;
 `;
 
+const Logo =  styled(Link)`
+  color: #0087BD;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration:none;
+`;
+
 class Header extends React.Component { // eslint-disable-line react/prefer-stateless-function
   render() {
     return (
       <div>
         <HeaderInner>
-          CRUD App
+          <Logo to="/">CRUD APP</Logo>
           <NavBar>
             <HeaderLink activeStyle={{ 'boxShadow': 'inset 0 -3px 0 #41addd', 'color':'#666' }} to="/">
               Home Page

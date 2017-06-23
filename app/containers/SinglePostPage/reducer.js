@@ -35,7 +35,6 @@ function singlePostPageReducer(state = initialState, action) {
     case LOAD_POST_ERROR:
       return state.set('post', {error:'Error'});
     case CHANGE_POST_ID:
-      //console.log(action.pid);
       return state.set('pid', action.pid);
     default:
       return state;

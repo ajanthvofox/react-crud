@@ -22,22 +22,6 @@ const selectPostId = () => createSelector(
 );
 
 /**
- * Selecter to get post title
- */
-const selectPostTitle = () => createSelector(
-  selectEditPostPageDomain(),
-  (editPage) => editPage.get('ptitle')
-);
-
-/**
- * Selecter to get post body
- */
-const selectPostBody = () => createSelector(
-  selectEditPostPageDomain(),
-  (editPage) => editPage.get('pbody')
-);
-
-/**
  * Default selector used by EditPostPage
  */
 
@@ -52,7 +36,5 @@ export {
   selectEditPostPageDomain,
   selectPost,
   selectPostId,
-  selectPostTitle,
-  selectPostBody,
   makeSelectEditPostPage,
 };

@@ -26,7 +26,6 @@ function* loadPosts() {
   };
   try{
     const data = yield call(request, url, params);
-    //console.log(data);
     yield put(loadPostsSuccessAction(data));
   } catch(err) {
     yield put(loadPostsErrorAction(err));

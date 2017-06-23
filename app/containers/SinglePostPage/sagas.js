@@ -27,7 +27,6 @@ import { selectPostId } from './selectors';
 // Saga to load single post data
 function* loadPost() {
   const pid = yield select(selectPostId());
-  //console.log(pid);
   const url = `https://jsonplaceholder.typicode.com/posts/${pid}`;
   const params = {
     method: 'GET',
@@ -37,7 +36,6 @@ function* loadPost() {
   };
   try{
     const data = yield call(request, url, params);
-    //console.log(data);
     yield put(loadPostSuccessAction(data));
   } catch(err) {
     yield put(loadPostErrorAction(err));
@@ -51,14 +49,12 @@ export function* postloadSaga() {
 // Saga to delete post
 function* deletePost() {
   const pid = yield select(selectPostId());
-  //console.log(pid);
   const url = `https://jsonplaceholder.typicode.com/posts/${pid}`;
   const params = {
     method: 'DELETE'
   };
   try{
     const data = yield call(request, url, params);
-    //console.log(data);
     yield put(deletePostSuccessAction(data));
   } catch(err) {
     yield put(deletePostErrorAction(err));

@@ -13,7 +13,7 @@ import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import Loader from 'react-loader';
 import ReactConfirmAlert, { confirmAlert } from 'react-confirm-alert';
-import 'react-confirm-alert/src/react-confirm-alert.css'
+import 'css/react-confirm-alert.css'
 import Notifications, {notify} from 'react-notify-toast';
 import {
   makeSelectSinglePostPage,
@@ -92,13 +92,17 @@ export class SinglePostPage extends React.Component { // eslint-disable-line rea
   componentDidMount() {
       this.props.doLoad();
   }
+
+  componentWillUnmount() {
+    var myElem = document.getElementById("react-confirm-alert");
+    if(myElem) {
+      document.getElementById("react-confirm-alert").remove();
+      document.getElementById("react-confirm-alert-firm-svg").remove();
+    }    
+  }
+
   constructor (props) {
     super(props)
-    // call the fetch when the component starts up
-    //console.log(this.props.params.id);
-    //window.postId = this.props.params.id;
-    //this.prop.postId = this.props.params.id;
-
   }
 
   componentWillReceiveProps(nextProps) {
@@ -149,7 +153,7 @@ export class SinglePostPage extends React.Component { // eslint-disable-line rea
                    <EditLink to={"/posts/edit/"+postData.id}>Edit</EditLink>
                    <BUTTON onClick={this.submit}>Delete</BUTTON>
                    <div style={{float:'left', marginTop:'10px'}}>
-                     <Link style={{color:'#41addd', fontWeight:'bold'}} href="/posts">Back to Posts</Link>
+                     <Link style={{color:'#41addd', fontWeight:'bold', textDecoration:'none'}} to="/posts">{"<< Back to Posts"}</Link>
                    </div>
                  </ToolBar>
                </PostBody>

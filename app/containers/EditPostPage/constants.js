@@ -7,8 +7,6 @@
 export const DEFAULT_ACTION = 'app/EditPostPage/DEFAULT_ACTION';
 
 export const CHANGE_POST_ID = 'app/EditPostPage/CHANGE_POST_ID';
-export const SET_POST_TITLE = 'app/EditPostPage/SET_POST_TITLE';
-export const SET_POST_BODY = 'app/EditPostPage/SET_POST_BODY';
 export const INI_POST_DATA = 'app/EditPostPage/INI_POST_DATA';
 
 export const LOAD_POST = 'app/EditPostPage/LOAD_POST';

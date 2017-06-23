@@ -21,11 +21,8 @@ function postsPageReducer(state = initialState, action) {
     case LOAD_POSTS:
       return state;
     case LOAD_POSTS_SUCCESS:
-      //console.log(action.data);
-      //console.log("success");
       return state.set('posts', action.data);
     case LOAD_POSTS_ERROR:
-      //console.log("error");
       return state;
     default:
       return state;

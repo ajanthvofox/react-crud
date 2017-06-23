@@ -14,8 +14,6 @@
    LOAD_POST_SUCCESS,
    LOAD_POST_ERROR,
    CHANGE_POST_ID,
-   SET_POST_TITLE,
-   SET_POST_BODY,
    INI_POST_DATA,
  } from './constants';
 
@@ -50,9 +48,10 @@ export function resetPostAction() {
   };
 }
 
-export function savePostAction() {
+export function savePostAction(data) {
   return {
     type: SAVE_POST,
+    data
   };
 }
 
@@ -77,23 +76,8 @@ export function iniPostData() {
 }
 
 export function changePostId(pid) {
-  //console.log(pid);
   return {
     type: CHANGE_POST_ID,
     pid,
-  };
-}
-
-export function setPostTitle(title) {
-  return {
-    type: SET_POST_TITLE,
-    title
-  };
-}
-
-export function setPostBody(body) {
-  return {
-    type: SET_POST_BODY,
-    body
   };
 }

@@ -15,8 +15,6 @@ import {
   LOAD_POST_SUCCESS,
   LOAD_POST_ERROR,
   CHANGE_POST_ID,
-  SET_POST_TITLE,
-  SET_POST_BODY,
   INI_POST_DATA,
 } from './constants';
 
@@ -33,27 +31,17 @@ function editPostPageReducer(state = initialState, action) {
     case LOAD_POST_ERROR:
       return state;
     case SAVE_POST:
-      return state;
+      return state.set('post', action.data);
     case SAVE_POST_SUCCESS:
-      return state.set('post', action.data).set('pid','').set('ptitle','').set('pbody','');
+      return state.set('post', action.data).set('pid','');
     case SAVE_POST_ERROR:
       return state.set('post', {error:'Error'});
     case CHANGE_POST_ID:
-      //console.log(action.pid);
       return state.set('pid', action.pid);
-    case SET_POST_TITLE:
-      return state.set('ptitle', action.title);
-    case SET_POST_BODY:
-      // return {
-      //   ...state, pbody:action.body
-      // };
-      return state.set('pbody', action.body);
     case RESET_POST:
-      return state.set('post', {}).set('pid','').set('ptitle','').set('pbody','');
+      return state.set('post', {}).set('pid','');
     case INI_POST_DATA:
       return state
-        .set('ptitle', '')
-        .set('pbody', '');
     default:
       return state;
   }
