@@ -17,9 +17,10 @@ export function defaultAction() {
   };
 }
 
-export function loadPostsAction() {
+export function loadPostsAction(page) {
   return {
     type: LOAD_POSTS,
+    page
   };
 }
 

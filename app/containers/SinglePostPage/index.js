@@ -27,7 +27,7 @@ import {
 } from './actions';
 import messages from './messages';
 import A from 'components/A';
-import BUTTON from 'components/BUTTON';
+import BUTTON from 'components/Button';
 import H1 from 'components/H1';
 import H2 from 'components/H2';
 import H3 from 'components/H3';
@@ -98,7 +98,7 @@ export class SinglePostPage extends React.Component { // eslint-disable-line rea
     if(myElem) {
       document.getElementById("react-confirm-alert").remove();
       document.getElementById("react-confirm-alert-firm-svg").remove();
-    }    
+    }
   }
 
   constructor (props) {

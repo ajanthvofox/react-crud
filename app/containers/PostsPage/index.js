@@ -12,7 +12,6 @@ import styled from 'styled-components';
 import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import Loader from 'react-loader';
-import Pagination from 'components/Pagination';
 import {
   makeSelectPostsPage,
   selectPosts
@@ -22,7 +21,7 @@ import {
 } from './actions';
 import messages from './messages';
 import A from 'components/A';
-import BUTTON from 'components/BUTTON';
+import BUTTON from 'components/Button';
 import H1 from 'components/H1';
 import H2 from 'components/H2';
 import H3 from 'components/H3';
@@ -70,22 +69,52 @@ color: #41addd;
 }
 `;
 
+const Ul = styled.ul`
+  float:right;
+`;
+
+const Li = styled.li`
+  float:left;
+  color:#41addd;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+  list-style: none;
+  &.disabled {
+    color: #81d8dd;
+    cursor: not-allowed;
+  }
+  &.active a {
+    background-color: #41addd;
+    color: #fff;
+    cursor: default;
+  }
+`;
+const Anchor = styled.a`
+  padding:7px 12px;
+  -moz-box-shadow:    inset 0 0 2px #41addd;
+  -webkit-box-shadow: inset 0 0 2px #41addd;
+  box-shadow:inset 0 0 2px #41addd;
+`;
+
 export class PostsPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
   constructor (props) {
     super(props)
-    // call the fetch when the component starts up
-    this.props.doLoad();
-
     this.state = {
-        pageOfItems: []
+        currentPage: 1,
+        pages: Array.from(new Array(10), (x,i) => i+1),
+        totalPages: 10
     };
-    this.onChangePage = this.onChangePage.bind(this);
   }
 
-  onChangePage(pageOfItems) {
-      // update state with new page of items
-      this.setState({ pageOfItems: pageOfItems });
+  componentWillMount() {
+    this.props.doLoad(this.state.currentPage);
+  }
+
+  setPage(page) {
+    this.setState({['currentPage']: page});
+    this.props.doLoad(page);
   }
 
   render() {
@@ -109,7 +138,7 @@ export class PostsPage extends React.Component { // eslint-disable-line react/pr
           <H2>All Posts <div style={{float:'right'}}><AddLink to="posts/edit">Add New</AddLink></div></H2>
           <div>
             {
-              this.state.pageOfItems.map((row, index) => {
+              postData.map((row, index) => {
                  return (
                    <PostWrapper key={index}>
                      <H3>{row.id}. {row.title}</H3>
@@ -120,7 +149,27 @@ export class PostsPage extends React.Component { // eslint-disable-line react/pr
                  );
               })
             }
-            <Pagination items={postData} onChangePage={this.onChangePage} />
+
+            <Ul className="pagination">
+                <Li className={this.state.currentPage === 1 ? 'disabled' : ''}>
+                    <Anchor onClick={() => this.setPage(1)}>First</Anchor>
+                </Li>
+                <Li className={this.state.currentPage === 1 ? 'disabled' : ''}>
+                    <Anchor onClick={() => this.setPage(this.state.currentPage - 1)}>{"<<"}</Anchor>
+                </Li>
+                {this.state.pages.map((page, index) =>
+                    <Li key={index} className={this.state.currentPage === page ? 'active' : ''}>
+                        <Anchor onClick={() => this.setPage(page)}>{page}</Anchor>
+                    </Li>
+                )}
+                <Li className={this.state.currentPage === this.state.totalPages ? 'disabled' : ''}>
+                    <Anchor onClick={() => this.setPage(this.state.currentPage + 1)}>{">>"}</Anchor>
+                </Li>
+                <Li className={this.state.currentPage === this.state.totalPages ? 'disabled' : ''}>
+                    <Anchor onClick={() => this.setPage(this.state.totalPages)}>Last</Anchor>
+                </Li>
+            </Ul>
+
           </div>
         </ContentWrapper>
       </Loader>
@@ -141,8 +190,8 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
-    doLoad: () => {
-      dispatch(loadPostsAction());
+    doLoad: (page) => {
+      dispatch(loadPostsAction(page));
     },
     dispatch,
   };

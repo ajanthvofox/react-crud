@@ -1,5 +1,6 @@
 // import { take, call, put, select } from 'redux-saga/effects';
-import { take, takeLatest, call, put, select } from 'redux-saga/effects';
+import { take, takeLatest, call, put, cancel } from 'redux-saga/effects';
+import { LOCATION_CHANGE } from 'react-router-redux';
 
 import request from 'utils/request';
 
@@ -16,8 +17,10 @@ import {
 } from './actions'
 
 // Saga to load posts data
-function* loadPosts() {
-  const url = 'https://jsonplaceholder.typicode.com/posts';
+function* loadPosts(param) {
+  console.log(param.page);
+  const start = (param.page - 1)*10;
+  const url = 'https://jsonplaceholder.typicode.com/posts?_start='+start+'&_limit=10';
   const params = {
     method: 'GET',
     headers: {
@@ -33,7 +36,9 @@ function* loadPosts() {
 }
 
 export function* postsloadSaga() {
-  yield takeLatest(LOAD_POSTS, loadPosts);
+  const watcher = yield takeLatest(LOAD_POSTS, loadPosts);
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
 }
 
 // Individual exports for testing

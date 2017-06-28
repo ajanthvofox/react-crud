@@ -17,7 +17,7 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 
 import A from 'components/A';
-import BUTTON from 'components/BUTTON';
+import BUTTON from 'components/Button';
 import H1 from 'components/H1';
 import H2 from 'components/H2';
 import H3 from 'components/H3';
