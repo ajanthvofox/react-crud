@@ -4,7 +4,7 @@
  *
  */
 
- import {
+import {
    DEFAULT_ACTION,
    RESET_POST,
    SAVE_POST,
@@ -15,7 +15,7 @@
    LOAD_POST_ERROR,
    CHANGE_POST_ID,
    INI_POST_DATA,
- } from './constants';
+} from './constants';
 
 export function defaultAction() {
   return {
@@ -51,12 +51,11 @@ export function resetPostAction() {
 export function savePostAction(data) {
   return {
     type: SAVE_POST,
-    data
+    data,
   };
 }
 
 export function savePostSuccessAction(data) {
-  data.success = "Success";
   return {
     type: SAVE_POST_SUCCESS,
     data,

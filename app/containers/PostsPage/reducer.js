@@ -20,13 +20,13 @@ function postsPageReducer(state = initialState, action) {
     case DEFAULT_ACTION:
       return state;
     case LOAD_POSTS:
-      return state.set('loading','Loading');
+      return state.set('loading', 'Loading');
     case LOAD_POSTS_SUCCESS:
-      return state.set('posts', action.data).set('loading','');
+      return state.set('posts', action.data).set('loading', '');
     case LOAD_POSTS_ERROR:
-      return state.set('loading','');
+      return state.set('loading', '');
     case LOAD_SET_PAGE:
-      return state.set('page',action.page);
+      return state.set('page', action.page);
     default:
       return state;
   }

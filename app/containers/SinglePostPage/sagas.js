@@ -5,21 +5,14 @@ import request from 'utils/request';
 
 import {
   LOAD_POST,
-  LOAD_POST_SUCCESS,
-  LOAD_POST_ERROR,
   DELETE_POST,
-  DELETE_POST_SUCCESS,
-  DELETE_POST_ERROR,
 } from './constants';
 
 import {
-  loadPostAction,
   loadPostSuccessAction,
   loadPostErrorAction,
-  deletePostAction,
   deletePostSuccessAction,
   deletePostErrorAction,
-  changePostId,
 } from './actions';
 
 import { selectPostId } from './selectors';
@@ -34,10 +27,10 @@ function* loadPost() {
       'Content-Type': 'application/json',
     },
   };
-  try{
+  try {
     const data = yield call(request, url, params);
     yield put(loadPostSuccessAction(data));
-  } catch(err) {
+  } catch (err) {
     yield put(loadPostErrorAction(err));
   }
 }
@@ -53,12 +46,12 @@ function* deletePost() {
   const pid = yield select(selectPostId());
   const url = `https://jsonplaceholder.typicode.com/posts/${pid}`;
   const params = {
-    method: 'DELETE'
+    method: 'DELETE',
   };
-  try{
+  try {
     const data = yield call(request, url, params);
     yield put(deletePostSuccessAction(data));
-  } catch(err) {
+  } catch (err) {
     yield put(deletePostErrorAction(err));
   }
 }

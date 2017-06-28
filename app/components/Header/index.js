@@ -1,9 +1,7 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
 import styled from 'styled-components';
 import { Link } from 'react-router';
 
-import A from './A';
 import NavBar from './NavBar';
 import HeaderLink from './HeaderLink';
 
@@ -13,7 +11,7 @@ const HeaderInner = styled.div`
   text-align: Left;
 `;
 
-const Logo =  styled(Link)`
+const Logo = styled(Link)`
   color: #0087BD;
   font-size: 30px;
   font-weight: bold;
@@ -27,10 +25,10 @@ class Header extends React.Component { // eslint-disable-line react/prefer-state
         <HeaderInner>
           <Logo to="/">CRUD APP</Logo>
           <NavBar>
-            <HeaderLink activeStyle={{ 'boxShadow': 'inset 0 -3px 0 #41addd', 'color':'#666' }} to="/">
+            <HeaderLink activeStyle={{ boxShadow: 'inset 0 -3px 0 #41addd', color: '#666' }} to="/">
               Home Page
             </HeaderLink>
-            <HeaderLink activeStyle={{ 'boxShadow': 'inset 0 -3px 0 #41addd', 'color':'#666' }} to="/posts">
+            <HeaderLink activeStyle={{ boxShadow: 'inset 0 -3px 0 #41addd', color: '#666' }} to="/posts">
               Posts Page
             </HeaderLink>
             {/* <HeaderLink activeStyle={{ 'boxShadow': 'inset 0 -3px 0 #41addd', 'color':'#666' }} to="/posts/edit">

@@ -14,7 +14,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Header from 'components/Header';
-import Notifications, {notify} from 'react-notify-toast';
+import Notifications from 'react-notify-toast';
 
 const HeaderContainer = styled.div`
   width: 100%;
@@ -24,8 +24,6 @@ const HeaderContainer = styled.div`
   padding:15px 40px 0px 40px;
   box-shadow: 0 4px 4px -2px gray;
 `;
-
-
 
 export default class App extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
@@ -37,10 +35,10 @@ export default class App extends React.PureComponent { // eslint-disable-line re
     return (
       <div>
         <HeaderContainer>
-          <Header/>
+          <Header />
         </HeaderContainer>
         <div>
-          {React.Children.toArray(this.props.children)}
+          { React.Children.toArray(this.props.children) }
         </div>
         <Notifications />
       </div>

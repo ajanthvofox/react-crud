@@ -9,10 +9,10 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
-import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
-import Notifications, {notify} from 'react-notify-toast';
+import { notify } from 'react-notify-toast';
 import Loader from 'react-loader';
+import H3 from 'components/H3';
 import {
   makeSelectEditPostPage,
   selectPostId,
@@ -22,17 +22,9 @@ import {
 import {
   resetPostAction,
   savePostAction,
-  iniPostData,
   loadPostAction,
   changePostId,
 } from './actions';
-import messages from './messages';
-
-import A from 'components/A';
-import BUTTON from 'components/Button';
-import H1 from 'components/H1';
-import H2 from 'components/H2';
-import H3 from 'components/H3';
 
 const Input = styled.input`
   width: 100%;
@@ -89,7 +81,7 @@ const PostBody = styled.div`
   font-size: 16px;
 `;
 
-const Button =  styled.button`
+const Button = styled.button`
   display: inline-block;
   box-sizing: border-box;
   line-height: 1.5;
@@ -119,7 +111,7 @@ const Button =  styled.button`
   }
 `;
 
-const BackLink =  styled(Link)`
+const BackLink = styled(Link)`
   display: inline-block;
   box-sizing: border-box;
   margin-left:10px;
@@ -146,73 +138,73 @@ const BackLink =  styled(Link)`
 export class EditPostPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
   constructor(props) {
-      super(props);
-      if(this.props.params.id) {
-        this.state = {
-          id: '',
-          title: '',
-          body: '',
-          userId: '1'
-        }
-      }
-      else {
-        this.state = {
-          title: '',
-          body: '',
-          userId: '1'
-        }
-      }
+    super(props);
+    if (this.props.params.id) {
+      this.state = {
+        id: '',
+        title: '',
+        body: '',
+        userId: '1',
+      };
     }
+    else {
+      this.state = {
+        title: '',
+        body: '',
+        userId: '1',
+      };
+    }
+  }
   componentWillMount() {
-      this.props.doReset();
-      if(this.props.params.id) {
-        this.props.onChangePostId(this.props.params.id);
-      }
+    this.props.doReset();
+    if (this.props.params.id) {
+      this.props.onChangePostId(this.props.params.id);
+    }
   }
   componentDidMount() {
-    if(this.props.params.id) {
+    if (this.props.params.id) {
       this.props.doLoad();
     }
   }
   componentWillReceiveProps(nextProps) {
-    if (nextProps.post.success == "Success") {
-      notify.show('Post Saved Successfully','success');
+    if (nextProps.post.success === 'Success') {
+      notify.show('Post Saved Successfully', 'success');
       this.props.router.push('/posts');
     }
-    if (nextProps.post.error == 'Error') {
-      notify.show('Failed Saving the Post','error');
+    if (nextProps.post.error === 'Error') {
+      notify.show('Failed Saving the Post', 'error');
     }
-    if(nextProps.post && nextProps.post.title !== '')
-    {
+    if (nextProps.post && nextProps.post.title !== '') {
       this.setState(nextProps.post);
     }
   }
   onChangeTitle(e) {
-    this.setState({['title']: e.target.value});
+    this.setState({ ['title']: e.target.value });
   }
   onChangeBody(e) {
-    this.setState({['body']: e.target.value});
+    this.setState({ ['body']: e.target.value });
   }
-  submitPost(e) {
-    this.props.doSave (this.state);
+  submitPost() {
+    this.props.doSave(this.state);
   }
   render() {
     let backBtn = null;
     let head = null;
-    if(this.props.params.id) {
-      backBtn = <Link style={{color:'#41addd', fontWeight:'bold', textDecoration:'none'}} to={"/posts/"+this.props.pid}>{"<< Back to Post"}</Link>;
+    if (this.props.params.id) {
+      backBtn = <Link style={{ color: '#41addd', fontWeight: 'bold', textDecoration: 'none' }} to={'/posts/' + this.props.pid}>{ '<< Back to Post' }</Link>;
       head = <H3>Edit Post - {this.props.pid}</H3>;
     }
     else {
-      backBtn = <Link style={{color:'#41addd', fontWeight:'bold', textDecoration:'none'}} to="/posts">{"<< Back to Posts"}</Link>;
+      backBtn = <Link style={{ color: '#41addd', fontWeight: 'bold', textDecoration: 'none' }} to="/posts">{ '<< Back to Posts' }</Link>;
       head = <H3>Create New Post</H3>;
     }
     return (
-      <Loader loaded={this.props.post && this.props.post.loading!=='Loading' && this.props.loading!=='Loading'} lines={13} length={20} width={10} radius={30}
-      corners={1} rotate={0} direction={1} color="#000" speed={1}
-      trail={60} shadow={false} hwaccel={false} className="spinner"
-      zIndex={2e9} top="50%" left="50%" scale={1.00}
-      loadedClassName="loadedContent">
+      <Loader loaded={this.props.post && this.props.post.loading !== 'Loading' && this.props.loading !== 'Loading'}
+        lines={13} length={20} width={10} radius={30}
+        corners={1} rotate={0} direction={1} color="#000" speed={1}
+        trail={60} shadow={false} hwaccel={false} className="spinner"
+        zIndex={2e9} top="50%" left="50%" scale={1.00}
+        loadedClassName="loadedContent">
         <ContentWrapper>
           <Helmet
             title="EditPostPage"
@@ -223,15 +215,15 @@ export class EditPostPage extends React.Component { // eslint-disable-line react
           <PostWrapper>
             {head}
             <PostBody>
-                <Input value={this.state.title} onChange={(value) => this.onChangeTitle(value)} ref="titleInput" type="text" id="title" name="title" placeholder="Post Title" />
-                <TextArea value={this.state.body} onChange={(value) => this.onChangeBody(value)} ref="bodyInput" id="body" name="body" placeholder="Post Content" />
-                <ToolBar>
-                  <Button disabled={!this.state.title || !this.state.body} onClick={() => this.submitPost()}>Save</Button>
-                  <BackLink to="/posts">Cancel</BackLink>
-                  <div style={{float:'left', marginTop:'10px'}}>
-                    {backBtn}
-                  </div>
-                </ToolBar>
+              <Input value={this.state.title} onChange={(value) => this.onChangeTitle(value)} type="text" id="title" name="title" placeholder="Post Title" />
+              <TextArea value={this.state.body} onChange={(value) => this.onChangeBody(value)} id="body" name="body" placeholder="Post Content" />
+              <ToolBar>
+                <Button disabled={!this.state.title || !this.state.body} onClick={() => this.submitPost()}>Save</Button>
+                <BackLink to="/posts">Cancel</BackLink>
+                <div style={{ float: 'left', marginTop: '10px' }}>
+                  {backBtn}
+                </div>
+              </ToolBar>
             </PostBody>
           </PostWrapper>
         </ContentWrapper>

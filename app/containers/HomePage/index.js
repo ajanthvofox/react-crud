@@ -10,17 +10,11 @@
  */
 
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
-import messages from './messages';
 import Helmet from 'react-helmet';
 
 import styled from 'styled-components';
 
-import A from 'components/A';
-import BUTTON from 'components/Button';
 import H1 from 'components/H1';
-import H2 from 'components/H2';
-import H3 from 'components/H3';
 
 const ContentWrapper = styled.div`
   max-width: calc(768px + 16px * 2);
@@ -50,7 +44,7 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
         <PostWrapper>
           <H1>Welcome to React CRUD APP</H1>
         </PostWrapper>
-        <img src={require('images/banners.png')} style={{width:'100%'}} />
+        <img role="presentation" src={require('images/banners.png')} style={{ width: '100%' }} />
       </ContentWrapper>
     );
   }

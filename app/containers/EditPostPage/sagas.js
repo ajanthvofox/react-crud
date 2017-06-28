@@ -5,21 +5,14 @@ import request from 'utils/request';
 
 import {
   SAVE_POST,
-  SAVE_POST_SUCCESS,
-  SAVE_POST_ERROR,
   LOAD_POST,
-  LOAD_POST_SUCCESS,
-  LOAD_POST_ERROR
 } from './constants';
 
 import {
-  savePostAction,
   savePostSuccessAction,
   savePostErrorAction,
-  loadPostAction,
   loadPostSuccessAction,
   loadPostErrorAction,
-  changePostId,
 } from './actions';
 
 import {
@@ -31,38 +24,39 @@ import {
 function* savePost() {
   const pid = yield select(selectPostId());
   const pdata = yield select(selectPost());
-  if(pid) {
+  if (pid) {
     const url = `https://jsonplaceholder.typicode.com/posts/${pid}`;
     const params = {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      data: pdata
+      data: pdata,
     };
-    try{
+    try {
       const data = yield call(request, url, params);
       yield put(savePostSuccessAction(data));
-    } catch(err) {
+    } catch (err) {
       yield put(savePostErrorAction(err));
     }
   }
   else {
-    const url = `https://jsonplaceholder.typicode.com/posts`;
+    const url = 'https://jsonplaceholder.typicode.com/posts';
     const params = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      data: pdata
+      data: pdata,
     };
-    try{
+    try {
       const data = yield call(request, url, params);
       yield put(savePostSuccessAction(data));
-    } catch(err) {
+    } catch (err) {
       yield put(savePostErrorAction(err));
     }
   }
+  
 }
 
 export function* postsaveSaga() {
@@ -86,10 +80,10 @@ function* loadPost() {
       'Content-Type': 'application/json',
     },
   };
-  try{
+  try {
     const data = yield call(request, url, params);
     yield put(loadPostSuccessAction(data));
-  } catch(err) {
+  } catch (err) {
     yield put(loadPostErrorAction(err));
   }
 }

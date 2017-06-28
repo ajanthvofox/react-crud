@@ -6,30 +6,27 @@ import request from 'utils/request';
 
 import {
   LOAD_POSTS,
-  LOAD_POSTS_SUCCESS,
-  LOAD_POSTS_ERROR,
 } from './constants';
 
 import {
-  loadPostsAction,
   loadPostsSuccessAction,
   loadPostsErrorAction,
-} from './actions'
+} from './actions';
 
 // Saga to load posts data
 function* loadPosts(param) {
-  const start = (param.page - 1)*10;
-  const url = 'https://jsonplaceholder.typicode.com/posts?_start='+start+'&_limit=10';
+  const start = (param.page - 1) * 10;
+  const url = 'https://jsonplaceholder.typicode.com/posts?_start=' + start.toString() + '&_limit=10';
   const params = {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
     },
   };
-  try{
+  try {
     const data = yield call(request, url, params);
     yield put(loadPostsSuccessAction(data));
-  } catch(err) {
+  } catch (err) {
     yield put(loadPostsErrorAction(err));
   }
 }

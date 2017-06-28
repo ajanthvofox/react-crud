@@ -9,21 +9,16 @@ import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router';
 import styled from 'styled-components';
-import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import Loader from 'react-loader';
-import ReactConfirmAlert, { confirmAlert } from 'react-confirm-alert';
-import 'css/react-confirm-alert.css'
-import Notifications, {notify} from 'react-notify-toast';
-import A from 'components/A';
+import { confirmAlert } from 'react-confirm-alert';
+import 'css/react-confirm-alert.css';
+import { notify } from 'react-notify-toast';
 import BUTTON from 'components/Button';
-import H1 from 'components/H1';
-import H2 from 'components/H2';
 import H3 from 'components/H3';
 import {
   makeSelectSinglePostPage,
   selectPost,
-  selectPostId,
   selectLoading,
 } from './selectors';
 import {
@@ -31,7 +26,6 @@ import {
   changePostId,
   deletePostAction,
 } from './actions';
-import messages from './messages';
 
 const ContentWrapper = styled.div`
   max-width: calc(768px + 16px * 2);
@@ -58,7 +52,7 @@ const PostBody = styled.div`
   font-size: 16px;
 `;
 
-const EditLink =  styled(Link)`
+const EditLink = styled(Link)`
   display: inline-block;
   box-sizing: border-box;
   margin-left:10px;
@@ -89,28 +83,24 @@ export class SinglePostPage extends React.Component { // eslint-disable-line rea
   }
 
   componentDidMount() {
-      this.props.doLoad();
-  }
-
-  componentWillUnmount() {
-    var myElem = document.getElementById('react-confirm-alert');
-    if (myElem) {
-      document.getElementById('react-confirm-alert').remove();
-      document.getElementById('react-confirm-alert-firm-svg').remove();
-    }
-  }
-
-  constructor (props) {
-    super(props)
+    this.props.doLoad();
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.post && nextProps.post.success == 'Success') {
-      notify.show('Post Deleted Successfully','success');
+    if (nextProps.post && nextProps.post.success === 'Success') {
+      notify.show('Post Deleted Successfully', 'success');
       this.props.router.push('/posts');
     }
-    if (nextProps.post && nextProps.post.error == 'Error') {
-      notify.show('Failed Deleting the Post','error');
+    if (nextProps.post && nextProps.post.error === 'Error') {
+      notify.show('Failed Deleting the Post', 'error');
+    }
+  }
+
+  componentWillUnmount() {
+    const myElem = document.getElementById('react-confirm-alert');
+    if (myElem) {
+      document.getElementById('react-confirm-alert').remove();
+      document.getElementById('react-confirm-alert-firm-svg').remove();
     }
   }
 
@@ -121,42 +111,44 @@ export class SinglePostPage extends React.Component { // eslint-disable-line rea
       confirmLabel: 'Confirm',                           // Text button confirm
       cancelLabel: 'Cancel',                             // Text button cancel
       onConfirm: () => this.props.doDelete(),    // Action after Confirm
-      //onCancel: () => alert('Action after Cancel'),      // Action after Cancel
-    })
+      // onCancel: () => alert('Action after Cancel'),      // Action after Cancel
+    });
   };
 
   render() {
     let postData = [];
     if (this.props.post) {
-      postData = this.props.post
+      postData = this.props.post;
     }
     return (
-      <Loader loaded={ this.props.post && this.props.post.loading !== 'Loading' && this.props.loading !== 'Loading' } lines={ 13 } length={ 20 } width={ 10 } radius={ 30 }
-      corners={ 1 } rotate={ 0 } direction={ 1 } color='#000' speed={ 1 }
-      trail = { 60 } shadow = { false } hwaccel = { false } className='spinner'
-      zIndex={2e9} top='50%' left='50%' scale={ 1.00 }
-      loadedClassName='loadedContent'>
+      <Loader
+        loaded={this.props.post && this.props.post.loading !== 'Loading' && this.props.loading !== 'Loading'}
+        lines={13} length={20} width={10} radius={30}
+        corners={1} rotate={0} direction={1} color="#000" speed={1}
+        trail={60} shadow={false} hwaccel={false} className="spinner"
+        zIndex={2e9} top="50%" left="50%" scale={1.00}
+        loadedClassName="loadedContent">
         <ContentWrapper>
           <Helmet
-            title='View Post'
+            title="View Post"
             meta={[
               { name: 'description', content: 'View post' },
             ]}
           />
           <div>
-             <PostWrapper>
-               <H3>{ postData.id }. { postData.title }</H3>
-               <PostBody>
-                 { postData.body }
-                 <ToolBar>
-                   <EditLink to={ '/posts/edit/'+postData.id }>Edit</EditLink>
-                   <BUTTON onClick={ this.submit }>Delete</BUTTON>
-                   <div style={{ float: 'left', marginTop: '10px' }}>
-                     <Link style={{ color: '#41addd', fontWeight: 'bold', textDecoration: 'none' }} to='/posts'>{ '<< Back to Posts' }</Link>
-                   </div>
-                 </ToolBar>
-               </PostBody>
-             </PostWrapper>
+            <PostWrapper>
+              <H3>{ postData.id }. { postData.title }</H3>
+              <PostBody>
+                { postData.body }
+                <ToolBar>
+                  <EditLink to={'/posts/edit/' + postData.id}>Edit</EditLink>
+                  <BUTTON onClick={this.submit}>Delete</BUTTON>
+                  <div style={{ float: 'left', marginTop: '10px' }}>
+                    <Link style={{ color: '#41addd', fontWeight: 'bold', textDecoration: 'none' }} to="/posts">{'<< Back to Posts'}</Link>
+                  </div>
+                </ToolBar>
+              </PostBody>
+            </PostWrapper>
           </div>
         </ContentWrapper>
       </Loader>
@@ -171,6 +163,7 @@ SinglePostPage.propTypes = {
   loading: PropTypes.string,
   doLoad: PropTypes.func,
   doDelete: PropTypes.func,
+  onChangePostId: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({

@@ -38,7 +38,7 @@ const makeSelectEditPostPage = () => createSelector(
   (substate) => substate.toJS()
 );
 
-//export default makeSelectEditPostPage;
+// export default makeSelectEditPostPage;
 
 export {
   selectEditPostPageDomain,
