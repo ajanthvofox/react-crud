@@ -18,7 +18,6 @@ import {
 
 // Saga to load posts data
 function* loadPosts(param) {
-  console.log(param.page);
   const start = (param.page - 1)*10;
   const url = 'https://jsonplaceholder.typicode.com/posts?_start='+start+'&_limit=10';
   const params = {
