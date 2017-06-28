@@ -1,5 +1,5 @@
 // import { take, call, put, select } from 'redux-saga/effects';
-import { take, takeLatest, call, put, select } from 'redux-saga/effects';
+import { take, takeLatest, call, put, select, cancel } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import request from 'utils/request';
 
@@ -9,7 +9,7 @@ import {
   LOAD_POST_ERROR,
   DELETE_POST,
   DELETE_POST_SUCCESS,
-  DELETE_POST_ERROR
+  DELETE_POST_ERROR,
 } from './constants';
 
 import {
@@ -43,7 +43,9 @@ function* loadPost() {
 }
 
 export function* postloadSaga() {
-  yield takeLatest(LOAD_POST, loadPost);
+  const loadSingleWatcher = yield takeLatest(LOAD_POST, loadPost);
+  yield take(LOCATION_CHANGE);
+  yield cancel(loadSingleWatcher);
 }
 
 // Saga to delete post
@@ -62,7 +64,9 @@ function* deletePost() {
 }
 
 export function* postdeleteSaga() {
-  yield takeLatest(DELETE_POST, deletePost);
+  const deletePostWatcher = yield takeLatest(DELETE_POST, deletePost);
+  yield take(LOCATION_CHANGE);
+  yield cancel(deletePostWatcher);
 }
 
 // Individual exports for testing

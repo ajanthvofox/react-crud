@@ -14,6 +14,14 @@ const selectPost = () => createSelector(
 );
 
 /**
+ * Selecter for loading status
+ */
+const selectLoading = () => createSelector(
+  selectEditPostPageDomain(),
+  (editPage) => editPage.get('loading')
+);
+
+/**
  * Selecter for post Id
  */
 const selectPostId = () => createSelector(
@@ -36,5 +44,6 @@ export {
   selectEditPostPageDomain,
   selectPost,
   selectPostId,
+  selectLoading,
   makeSelectEditPostPage,
 };

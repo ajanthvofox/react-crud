@@ -12,10 +12,12 @@ import styled from 'styled-components';
 import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import Notifications, {notify} from 'react-notify-toast';
+import Loader from 'react-loader';
 import {
   makeSelectEditPostPage,
   selectPostId,
   selectPost,
+  selectLoading,
 } from './selectors';
 import {
   resetPostAction,
@@ -180,7 +182,7 @@ export class EditPostPage extends React.Component { // eslint-disable-line react
     if (nextProps.post.error == 'Error') {
       notify.show('Failed Saving the Post','error');
     }
-    if(nextProps.post)
+    if(nextProps.post && nextProps.post.title !== '')
     {
       this.setState(nextProps.post);
     }
@@ -206,28 +208,34 @@ export class EditPostPage extends React.Component { // eslint-disable-line react
       head = <H3>Create New Post</H3>;
     }
     return (
-      <ContentWrapper>
-        <Helmet
-          title="EditPostPage"
-          meta={[
-            { name: 'description', content: 'Description of EditPostPage' },
-          ]}
-        />
-        <PostWrapper>
-          {head}
-          <PostBody>
-              <Input value={this.state.title} onChange={(value) => this.onChangeTitle(value)} ref="titleInput" type="text" id="title" name="title" placeholder="Post Title" />
-              <TextArea value={this.state.body} onChange={(value) => this.onChangeBody(value)} ref="bodyInput" id="body" name="body" placeholder="Post Content" />
-              <ToolBar>
-                <Button disabled={!this.state.title || !this.state.body} onClick={() => this.submitPost()}>Save</Button>
-                <BackLink to="/posts">Cancel</BackLink>
-                <div style={{float:'left', marginTop:'10px'}}>
-                  {backBtn}
-                </div>
-              </ToolBar>
-          </PostBody>
-        </PostWrapper>
-      </ContentWrapper>
+      <Loader loaded={this.props.post && this.props.post.loading!=='Loading' && this.props.loading!=='Loading'} lines={13} length={20} width={10} radius={30}
+      corners={1} rotate={0} direction={1} color="#000" speed={1}
+      trail={60} shadow={false} hwaccel={false} className="spinner"
+      zIndex={2e9} top="50%" left="50%" scale={1.00}
+      loadedClassName="loadedContent">
+        <ContentWrapper>
+          <Helmet
+            title="EditPostPage"
+            meta={[
+              { name: 'description', content: 'Description of EditPostPage' },
+            ]}
+          />
+          <PostWrapper>
+            {head}
+            <PostBody>
+                <Input value={this.state.title} onChange={(value) => this.onChangeTitle(value)} ref="titleInput" type="text" id="title" name="title" placeholder="Post Title" />
+                <TextArea value={this.state.body} onChange={(value) => this.onChangeBody(value)} ref="bodyInput" id="body" name="body" placeholder="Post Content" />
+                <ToolBar>
+                  <Button disabled={!this.state.title || !this.state.body} onClick={() => this.submitPost()}>Save</Button>
+                  <BackLink to="/posts">Cancel</BackLink>
+                  <div style={{float:'left', marginTop:'10px'}}>
+                    {backBtn}
+                  </div>
+                </ToolBar>
+            </PostBody>
+          </PostWrapper>
+        </ContentWrapper>
+      </Loader>
     );
   }
 }
@@ -236,6 +244,7 @@ EditPostPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   post: PropTypes.object,
   pid: PropTypes.string,
+  loading: PropTypes.string,
   doSave: PropTypes.func,
   doLoad: PropTypes.func,
   doReset: PropTypes.func,
@@ -245,6 +254,7 @@ const mapStateToProps = createStructuredSelector({
   EditPostPage: makeSelectEditPostPage(),
   post: selectPost(),
   pid: selectPostId(),
+  loading: selectLoading(),
 });
 
 function mapDispatchToProps(dispatch) {

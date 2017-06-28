@@ -8,7 +8,8 @@ import {
   DEFAULT_ACTION,
   LOAD_POSTS,
   LOAD_POSTS_SUCCESS,
-  LOAD_POSTS_ERROR
+  LOAD_POSTS_ERROR,
+  LOAD_SET_PAGE,
 } from './constants';
 
 export function defaultAction() {
@@ -20,7 +21,14 @@ export function defaultAction() {
 export function loadPostsAction(page) {
   return {
     type: LOAD_POSTS,
-    page
+    page,
+  };
+}
+
+export function loadSetPage(page) {
+  return {
+    type: LOAD_SET_PAGE,
+    page,
   };
 }
 

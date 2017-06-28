@@ -7,13 +7,13 @@ import request from 'utils/request';
 import {
   LOAD_POSTS,
   LOAD_POSTS_SUCCESS,
-  LOAD_POSTS_ERROR
+  LOAD_POSTS_ERROR,
 } from './constants';
 
 import {
   loadPostsAction,
   loadPostsSuccessAction,
-  loadPostsErrorAction
+  loadPostsErrorAction,
 } from './actions'
 
 // Saga to load posts data

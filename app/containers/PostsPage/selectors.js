@@ -14,6 +14,23 @@ const selectPosts = () => createSelector(
 );
 
 /**
+ * Selecter for loading status
+ */
+const selectLoading = () => createSelector(
+  selectPostsPageDomain(),
+  (postsPage) => postsPage.get('loading')
+);
+
+/**
+ * Selecter for current page
+ */
+const selectPage = () => createSelector(
+  selectPostsPageDomain(),
+  (postsPage) => postsPage.get('page')
+);
+
+
+/**
  * Default selector used by PostsPage
  */
 
@@ -25,5 +42,7 @@ const makeSelectPostsPage = () => createSelector(
 export {
   selectPostsPageDomain,
   selectPosts,
-  makeSelectPostsPage
+  selectLoading,
+  selectPage,
+  makeSelectPostsPage,
 };

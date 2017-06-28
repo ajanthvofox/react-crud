@@ -15,10 +15,16 @@ import Loader from 'react-loader';
 import ReactConfirmAlert, { confirmAlert } from 'react-confirm-alert';
 import 'css/react-confirm-alert.css'
 import Notifications, {notify} from 'react-notify-toast';
+import A from 'components/A';
+import BUTTON from 'components/Button';
+import H1 from 'components/H1';
+import H2 from 'components/H2';
+import H3 from 'components/H3';
 import {
   makeSelectSinglePostPage,
   selectPost,
-  selectPostId
+  selectPostId,
+  selectLoading,
 } from './selectors';
 import {
   loadPostAction,
@@ -26,11 +32,6 @@ import {
   deletePostAction,
 } from './actions';
 import messages from './messages';
-import A from 'components/A';
-import BUTTON from 'components/Button';
-import H1 from 'components/H1';
-import H2 from 'components/H2';
-import H3 from 'components/H3';
 
 const ContentWrapper = styled.div`
   max-width: calc(768px + 16px * 2);
@@ -58,35 +59,33 @@ const PostBody = styled.div`
 `;
 
 const EditLink =  styled(Link)`
-display: inline-block;
-box-sizing: border-box;
-margin-left:10px;
-padding: 0.25em 2em;
-text-decoration: none;
-border-radius: 4px;
--webkit-font-smoothing: antialiased;
--webkit-touch-callout: none;
-user-select: none;
-cursor: pointer;
-outline: 0;
-font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-font-weight: bold;
-font-size: 16px;
-border: 2px solid #41addd;
-color: #41addd;
+  display: inline-block;
+  box-sizing: border-box;
+  margin-left:10px;
+  padding: 0.25em 2em;
+  text-decoration: none;
+  border-radius: 4px;
+  -webkit-font-smoothing: antialiased;
+  -webkit-touch-callout: none;
+  user-select: none;
+  cursor: pointer;
+  outline: 0;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  font-size: 16px;
+  border: 2px solid #41addd;
+  color: #41addd;
 
-&:active {
-  background: #41addd;
-  color: #fff;
-}
+  &:active {
+    background: #41addd;
+    color: #fff;
+  }
 `;
-
 
 export class SinglePostPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
   componentWillMount() {
     this.props.onChangePostId(this.props.params.id);
-
   }
 
   componentDidMount() {
@@ -94,10 +93,10 @@ export class SinglePostPage extends React.Component { // eslint-disable-line rea
   }
 
   componentWillUnmount() {
-    var myElem = document.getElementById("react-confirm-alert");
-    if(myElem) {
-      document.getElementById("react-confirm-alert").remove();
-      document.getElementById("react-confirm-alert-firm-svg").remove();
+    var myElem = document.getElementById('react-confirm-alert');
+    if (myElem) {
+      document.getElementById('react-confirm-alert').remove();
+      document.getElementById('react-confirm-alert-firm-svg').remove();
     }
   }
 
@@ -106,7 +105,7 @@ export class SinglePostPage extends React.Component { // eslint-disable-line rea
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.post && nextProps.post.success == "Success") {
+    if (nextProps.post && nextProps.post.success == 'Success') {
       notify.show('Post Deleted Successfully','success');
       this.props.router.push('/posts');
     }
@@ -132,28 +131,28 @@ export class SinglePostPage extends React.Component { // eslint-disable-line rea
       postData = this.props.post
     }
     return (
-      <Loader loaded={this.props.post && this.props.post.loading!="Loading"} lines={13} length={20} width={10} radius={30}
-      corners={1} rotate={0} direction={1} color="#000" speed={1}
-      trail={60} shadow={false} hwaccel={false} className="spinner"
-      zIndex={2e9} top="50%" left="50%" scale={1.00}
-      loadedClassName="loadedContent">
+      <Loader loaded={ this.props.post && this.props.post.loading !== 'Loading' && this.props.loading !== 'Loading' } lines={ 13 } length={ 20 } width={ 10 } radius={ 30 }
+      corners={ 1 } rotate={ 0 } direction={ 1 } color='#000' speed={ 1 }
+      trail = { 60 } shadow = { false } hwaccel = { false } className='spinner'
+      zIndex={2e9} top='50%' left='50%' scale={ 1.00 }
+      loadedClassName='loadedContent'>
         <ContentWrapper>
           <Helmet
-            title="View Post"
+            title='View Post'
             meta={[
               { name: 'description', content: 'View post' },
             ]}
           />
           <div>
              <PostWrapper>
-               <H3>{postData.id}. {postData.title}</H3>
+               <H3>{ postData.id }. { postData.title }</H3>
                <PostBody>
-                 {postData.body}
+                 { postData.body }
                  <ToolBar>
-                   <EditLink to={"/posts/edit/"+postData.id}>Edit</EditLink>
-                   <BUTTON onClick={this.submit}>Delete</BUTTON>
-                   <div style={{float:'left', marginTop:'10px'}}>
-                     <Link style={{color:'#41addd', fontWeight:'bold', textDecoration:'none'}} to="/posts">{"<< Back to Posts"}</Link>
+                   <EditLink to={ '/posts/edit/'+postData.id }>Edit</EditLink>
+                   <BUTTON onClick={ this.submit }>Delete</BUTTON>
+                   <div style={{ float: 'left', marginTop: '10px' }}>
+                     <Link style={{ color: '#41addd', fontWeight: 'bold', textDecoration: 'none' }} to='/posts'>{ '<< Back to Posts' }</Link>
                    </div>
                  </ToolBar>
                </PostBody>
@@ -169,6 +168,7 @@ SinglePostPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   post: PropTypes.object,
   pid: PropTypes.string,
+  loading: PropTypes.string,
   doLoad: PropTypes.func,
   doDelete: PropTypes.func,
 };
@@ -176,6 +176,7 @@ SinglePostPage.propTypes = {
 const mapStateToProps = createStructuredSelector({
   SinglePostPage: makeSelectSinglePostPage(),
   post: selectPost(),
+  loading: selectLoading(),
 });
 
 function mapDispatchToProps(dispatch) {

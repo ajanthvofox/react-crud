@@ -14,10 +14,13 @@ import { createStructuredSelector } from 'reselect';
 import Loader from 'react-loader';
 import {
   makeSelectPostsPage,
-  selectPosts
+  selectPosts,
+  selectLoading,
+  selectPage,
 } from './selectors';
 import {
-  loadPostsAction
+  loadPostsAction,
+  loadSetPage,
 } from './actions';
 import messages from './messages';
 import A from 'components/A';
@@ -101,11 +104,20 @@ export class PostsPage extends React.Component { // eslint-disable-line react/pr
 
   constructor (props) {
     super(props)
-    this.state = {
-        currentPage: 1,
-        pages: Array.from(new Array(10), (x,i) => i+1),
-        totalPages: 10
-    };
+    if(this.props.page) {
+      this.state = {
+          currentPage: this.props.page,
+          pages: Array.from(new Array(10), (x,i) => i+1),
+          totalPages: 10
+      };
+    }
+    else {
+      this.state = {
+          currentPage: 1,
+          pages: Array.from(new Array(10), (x,i) => i+1),
+          totalPages: 10
+      };
+    }
   }
 
   componentWillMount() {
@@ -114,6 +126,7 @@ export class PostsPage extends React.Component { // eslint-disable-line react/pr
 
   setPage(page) {
     this.setState({['currentPage']: page});
+    this.props.currentPage(page);
     this.props.doLoad(page);
   }
 
@@ -121,6 +134,11 @@ export class PostsPage extends React.Component { // eslint-disable-line react/pr
     let postData = [];
     if (this.props.posts && !this.props.posts.loading) {
       postData = this.props.posts
+    }
+    let style = {};
+    if(this.props.loading === 'Loading')
+    {
+      style = {opacity: '0.5'}
     }
     return (
       <Loader loaded={typeof this.props.posts !== 'undefined'} lines={13} length={20} width={10} radius={30}
@@ -136,12 +154,17 @@ export class PostsPage extends React.Component { // eslint-disable-line react/pr
             ]}
           />
           <H2>All Posts <div style={{float:'right'}}><AddLink to="posts/edit">Add New</AddLink></div></H2>
-          <div>
+          <Loader loaded={this.props.loading !== 'Loading'} lines={10} length={7} width={3} radius={10}
+          corners={1} rotate={0} direction={1} color="#41addd" speed={1}
+          trail={60} shadow={false} hwaccel={false} className="spinner"
+          zIndex={2e9} top="45%" left="50%" scale={1.00} opacity={0.6}
+          position='fixed' loadedClassName="loadedContent"></Loader>
+          <div style={style}>
             {
               postData.map((row, index) => {
                  return (
                    <PostWrapper key={index}>
-                     <H3>{row.id}. {row.title}</H3>
+                     <H3><Link style={{ color: '#333', fontWeight: 'bold', textDecoration: 'none' }} to={"/posts/"+row.id}>{row.id}. {row.title}</Link></H3>
                      <PostBody>
                        {row.body.substr(0,70)}...<Link style={{color:'#41addd', fontWeight:'bold', textDecoration:'none', fontSize:'15px'}} to={"/posts/"+row.id}> Read More >></Link>
                      </PostBody>
@@ -149,6 +172,8 @@ export class PostsPage extends React.Component { // eslint-disable-line react/pr
                  );
               })
             }
+          </div>
+
 
             <Ul className="pagination">
                 <Li className={this.state.currentPage === 1 ? 'disabled' : ''}>
@@ -170,7 +195,7 @@ export class PostsPage extends React.Component { // eslint-disable-line react/pr
                 </Li>
             </Ul>
 
-          </div>
+
         </ContentWrapper>
       </Loader>
     );
@@ -180,18 +205,26 @@ export class PostsPage extends React.Component { // eslint-disable-line react/pr
 PostsPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   posts: PropTypes.array,
+  loading:PropTypes.string,
   doLoad: PropTypes.func,
+  currentPage: PropTypes.func,
+  page: PropTypes.number,
 };
 
 const mapStateToProps = createStructuredSelector({
   PostsPage: makeSelectPostsPage(),
   posts: selectPosts(),
+  loading: selectLoading(),
+  page: selectPage(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     doLoad: (page) => {
       dispatch(loadPostsAction(page));
+    },
+    currentPage: (page) => {
+      dispatch(loadSetPage(page));
     },
     dispatch,
   };

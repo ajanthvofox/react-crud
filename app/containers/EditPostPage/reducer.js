@@ -25,17 +25,17 @@ function editPostPageReducer(state = initialState, action) {
     case DEFAULT_ACTION:
       return state;
     case LOAD_POST:
-      return state;
+      return state.set('post', {loading: 'Loading'});
     case LOAD_POST_SUCCESS:
-      return state.set('post', action.data).set('ptitle',action.data.title).set('pbody',action.data.body);
-    case LOAD_POST_ERROR:
-      return state;
-    case SAVE_POST:
       return state.set('post', action.data);
+    case LOAD_POST_ERROR:
+      return state.set('post', {loading: 'Error'});
+    case SAVE_POST:
+      return state.set('post', action.data).set('loading', 'Loading');
     case SAVE_POST_SUCCESS:
-      return state.set('post', action.data).set('pid','');
+      return state.set('post', action.data).set('pid','').set('loading', '');
     case SAVE_POST_ERROR:
-      return state.set('post', {error:'Error'});
+      return state.set('post', {error:'Error'}).set('loading', '');
     case CHANGE_POST_ID:
       return state.set('pid', action.pid);
     case RESET_POST:

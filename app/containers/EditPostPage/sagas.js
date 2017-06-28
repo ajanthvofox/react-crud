@@ -1,5 +1,5 @@
 // import { take, call, put, select } from 'redux-saga/effects';
-import { take, takeLatest, call, put, select } from 'redux-saga/effects';
+import { take, takeLatest, call, put, select, cancel } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import request from 'utils/request';
 
@@ -66,7 +66,9 @@ function* savePost() {
 }
 
 export function* postsaveSaga() {
-  yield takeLatest(SAVE_POST, savePost);
+  const savePostWatcher = yield takeLatest(SAVE_POST, savePost);
+  yield take(LOCATION_CHANGE);
+  yield cancel(savePostWatcher);
 }
 
 // Individual exports for testing
@@ -93,7 +95,9 @@ function* loadPost() {
 }
 
 export function* postloadSaga() {
-  yield takeLatest(LOAD_POST, loadPost);
+  const loadPostWatcher = yield takeLatest(LOAD_POST, loadPost);
+  yield take(LOCATION_CHANGE);
+  yield cancel(loadPostWatcher);
 }
 
 // All sagas to be loaded
